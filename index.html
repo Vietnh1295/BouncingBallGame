@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p id="Diem"></p><input type="button" value="Choi" onclick="Begin()">
+<canvas id="game" width="500px" height="600px" style=" border-style: double;  border-width: thick;">
+</canvas>
+
+<script>    var canvas=document.getElementById('game');
+var context=canvas.getContext("2d");
+var gameover=false;
+var Diem=0;
+    var Ball= function ()
+        {
+            this.x=40;
+            this.y=40;
+            this.xsp=5;
+            this.ysp=2;
+            this.radius=10;
+        }
+var ThanhNgang=function ()
+{
+        this.x=0;
+        this.y=canvas.height-50;
+        this.width=100;
+        this.height=10;
+        this.speed=10;
+        this.ismoveleft=false;
+        this.ismoveright=false;
+
+}
+function Begin()
+{
+    ball.x=40;
+    ball.y=40;
+    gameover=false;
+    Diem=0;
+    document.getElementById('Diem').innerHTML='Diem so '+ Diem;
+    draw();
+}
+document.addEventListener('keydown',function (evt) {
+    switch(evt.keyCode)
+    {
+        case 37:
+            thanhngang.ismoveleft=true;
+            break;
+        case 39:
+            thanhngang.ismoveright=true;
+            break;
+    }
+})
+document.addEventListener('keyup',function (evt) {
+    switch(evt.keyCode)
+    {
+        case 37:
+            thanhngang.ismoveleft=false;
+            break;
+        case 39:
+            thanhngang.ismoveright=false;
+            break;
+    }
+})
+   var ball=new Ball();
+    var thanhngang=new ThanhNgang();
+    function drawball() {
+        context.beginPath();
+        context.arc(ball.x,ball.y,ball.radius,0,Math.PI*2);
+        context.fill();
+        context.closePath();
+    }
+function drawThanhNgang() {
+    context.beginPath();
+    context.rect(thanhngang.x,thanhngang.y,thanhngang.width,thanhngang.height);
+    context.fill();
+    context.closePath();
+}
+function BongChamBien() {
+    if(ball.x<ball.radius || ball.x>canvas.width-ball.radius)
+    {
+        ball.xsp=-ball.xsp;
+    }
+    if (ball.y<ball.radius)
+    {
+        ball.ysp=-ball.ysp;
+    }
+}
+function BongDiCHuyen() {
+    ball.x+=ball.xsp;
+    ball.y+=ball.ysp;
+}
+function  thanhNgangdchuyen() {
+    if(thanhngang.ismoveleft)
+    {
+        thanhngang.x=thanhngang.x-thanhngang.speed;
+    }
+    if(thanhngang.ismoveright)
+    {
+        thanhngang.x=thanhngang.x+thanhngang.speed;
+    }
+    if(ball.y>canvas.height-ball.radius)
+    {
+        gameover=true;
+    }
+    thanhngang.x=thanhngang.x<0?0:thanhngang.x;
+    thanhngang.x=thanhngang.x>canvas.width-thanhngang.width?canvas.width-thanhngang.width:thanhngang.x;
+}
+function BongVaCham() {
+    if(ball.x+ball.radius>thanhngang.x&&ball.x+ball.radius<thanhngang.x+thanhngang.width&&ball.y+ball.radius>=thanhngang.y&&ball.y+ball.radius<thanhngang.y+50)
+    {
+        if(thanhngang.ismoveright||thanhngang.ismoveleft)
+        {
+            ball.ysp=-(ball.ysp+thanhngang.speed/5);
+        }
+        else
+            {
+                ball.ysp=-2;
+            }
+    }
+}
+    function draw() {
+        if(gameover)
+        {
+            alert('GameOver');
+        }
+        else{
+            {
+                context.clearRect(0,0,canvas.width,canvas.height);
+        drawball();
+        drawThanhNgang();
+                BongChamBien();
+                BongDiCHuyen();
+                thanhNgangdchuyen();
+                BongVaCham();
+                Diem++;
+                document.getElementById('Diem').innerHTML='Diem so '+ Math.floor(Diem/10);
+    requestAnimationFrame(draw)}
+    }}draw();
+</script>
+</body>
+</html>
